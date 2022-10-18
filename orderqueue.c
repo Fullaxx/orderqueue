@@ -76,7 +76,7 @@ static oqnode_t* find_predecessor(oqtype_t num)
 
 /**
 	Insert a data package into the pipeline
-	Push all older elements to the right
+	Push all lower elements to the right
 	asterisks are printed if we updated a global edge pointer
 	ellipsis are printed otherwise
 */
@@ -122,7 +122,7 @@ int pipeline_insert(void *pkg, oqtype_t num)
 		n += snprintf(&log[n], 128-n, OQFMT, post->num);
 		n += snprintf(&log[n], 128-n, " ...");
 	} else {
-		/* cursor is oldest */
+		/* cursor is lowest */
 		g_lowest = cursor;
 		n += snprintf(&log[n], 128-n, " ***");
 	}

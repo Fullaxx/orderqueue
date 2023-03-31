@@ -1,8 +1,6 @@
 #!/bin/bash
 
-set -e
-
-CFLAGS="-Wall -std=c99"
+CFLAGS="-Wall -ansi -std=c99"
 OPTCFLAGS="${CFLAGS} -O2"
 DBGCFLAGS="${CFLAGS} -ggdb3 -DDEBUG"
 

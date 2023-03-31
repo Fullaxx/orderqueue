@@ -41,13 +41,13 @@ oqnode_t *g_highest = NULL;
 oqnode_t *g_lowest = NULL;
 unsigned long g_count = 0;
 
-static inline void bail(char *s)
+static void bail(char *s)
 {
 	fprintf(stderr, "%s\n", s);
 	exit(EXIT_FAILURE);
 }
 
-static inline void* new_oqnode(void)
+static void* new_oqnode(void)
 {
 	void *p = calloc(1, sizeof(oqnode_t));
 	if(!p) { bail("calloc() failed!"); }

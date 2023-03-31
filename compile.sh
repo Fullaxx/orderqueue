@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 CFLAGS="-Wall -ansi -D_GNU_SOURCE"
 OPTCFLAGS="${CFLAGS} -O2"
 DBGCFLAGS="${CFLAGS} -ggdb3 -DDEBUG"

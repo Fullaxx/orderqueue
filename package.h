@@ -1,5 +1,5 @@
 /*
-	A numerically ordered linked-list queue written in ANSI C
+	A numerically ordered linked-list queue
 	Copyright (C) 2022 Brett Kuskie <fullaxx@gmail.com>
 
 	This program is free software; you can redistribute it and/or modify

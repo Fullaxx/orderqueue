@@ -23,8 +23,6 @@
 #include "orderqueue.h"
 #include "package.h"
 
-int g_shutdown = 0;
-
 static void print_and_destroy(oqnode_t *p)
 {
 	char num[64];

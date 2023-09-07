@@ -74,13 +74,16 @@ static oqnode_t* find_predecessor(oqtype_t num)
 	return cursor;
 }
 
+#define BAIL_INSERTION_SAFELY(p) { free(p); PIPEUNLOCK; return 0; }
+
 /**
 	Insert a data package into the pipeline
 	Push all lower elements to the right
 	asterisks are printed if we updated a global edge pointer
 	ellipsis are printed otherwise
+	return the number of elements inserted
 */
-int pipeline_insert(void *pkg, oqtype_t num)
+int pipeline_insert(void *pkg, oqtype_t num, int reject_dupes)
 {
 	int n = 0;
 	char log[128];
@@ -98,10 +101,16 @@ int pipeline_insert(void *pkg, oqtype_t num)
 		pre = find_predecessor(num);
 		cursor = new_oqnode();
 		if(!pre) {
+			/* If we are not allowing duplicates, reject them here */
+			if((reject_dupes) && (g_highest) && (num == g_highest->num)) { BAIL_INSERTION_SAFELY(cursor) }
+
 			/* cursor is higher than g_highest */
 			post = g_highest;
 			g_highest = cursor;
 		} else {
+			/* If we are not allowing duplicates, reject them here */
+			if((reject_dupes) && (pre->lower) && (num == pre->lower->num)) { BAIL_INSERTION_SAFELY(cursor) }
+
 			/* cursor is lower than pre */
 			n += snprintf(&log[n], 128-n, "... ");
 			n += snprintf(&log[n], 128-n, OQFMT, pre->num);
@@ -137,7 +146,7 @@ int pipeline_insert(void *pkg, oqtype_t num)
 #ifdef DEBUG_INSERT
 	fprintf(stderr, "INSERT: %s\n", log);
 #endif
-	return 0;
+	return 1;
 }
 
 /* How many elements in the pipeline? */

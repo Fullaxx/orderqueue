@@ -19,32 +19,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <signal.h>
-#include <time.h>
 
 #include "orderqueue.h"
 #include "package.h"
 
 int g_shutdown = 0;
-
-static void alarm_handler(int signum)
-{
-/*
-	(void) alarm(1);
-*/
-}
-
-static void sig_handler(int signum)
-{
-	switch(signum) {
-		case SIGHUP:
-		case SIGINT:
-		case SIGTERM:
-		case SIGQUIT:
-			g_shutdown = 1;
-			break;
-	}
-}
 
 static void print_and_destroy(oqnode_t *p)
 {
@@ -57,9 +36,8 @@ static void print_and_destroy(oqnode_t *p)
 	destroy_orphan(p);
 }
 
-static void add_random(long limit)
+static void add_random(oqtype_t num)
 {
-	oqtype_t num;
 	dp_t *dp;
 
 	/* Create a data package */
@@ -67,33 +45,24 @@ static void add_random(long limit)
 	dp->buf = (unsigned char *)"?";
 	dp->len = 2;
 
-	/* Generate a random number */
-	num = rand();
-#ifdef ORDERQUEUE_DOUBLE
-	num += (double)rand()/(double)RAND_MAX;
-#endif
-
 	/* Insert data package into the pipeline */
-	(void)pipeline_insert(dp, num, 0);
-	if(pipeline_count() > limit) { g_shutdown = 1; }
+	int n = pipeline_insert(dp, num, 1);
+	if(n == 0) { printf("%ld not inserted!\n", num); }
 }
 
 int main(int argc, char *argv[])
 {
 	oqnode_t *p;
 
-	if(argc != 2) { fprintf(stderr, "%s: <limit>\n", argv[0]); return 1; }
-
-	srand(time(NULL));
-
-	signal(SIGINT,	sig_handler);
-	signal(SIGTERM, sig_handler);
-	signal(SIGQUIT,	sig_handler);
-	signal(SIGHUP,	sig_handler);
-	signal(SIGALRM, alarm_handler);
-	(void) alarm(1);
-
-	while(!g_shutdown) { add_random(atol(argv[1])); }
+	add_random(41);
+	add_random(41);
+	add_random(42);
+	add_random(42);
+	add_random(41);
+	add_random(43);
+	add_random(43);
+	add_random(42);
+	add_random(41);
 
 	printf("\n");
 

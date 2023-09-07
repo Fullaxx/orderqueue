@@ -42,7 +42,7 @@ typedef struct orderqueue_node {
 	struct orderqueue_node *higher;
 } oqnode_t;
 
-int pipeline_insert(void *, oqtype_t);
+int pipeline_insert(void *, oqtype_t, int);
 long pipeline_count(void);
 oqtype_t pipeline_span(void);
 oqnode_t *pipeline_pop(int);

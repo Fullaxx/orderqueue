@@ -34,7 +34,7 @@ static void print_and_destroy(oqnode_t *p)
 	destroy_orphan(p);
 }
 
-static void add_random(oqtype_t num)
+static void add_to_orderqueue(oqtype_t num)
 {
 	dp_t *dp;
 
@@ -52,15 +52,15 @@ int main(int argc, char *argv[])
 {
 	oqnode_t *p;
 
-	add_random(41);
-	add_random(41);
-	add_random(42);
-	add_random(42);
-	add_random(41);
-	add_random(43);
-	add_random(43);
-	add_random(42);
-	add_random(41);
+	add_to_orderqueue(41);
+	add_to_orderqueue(41);
+	add_to_orderqueue(42);
+	add_to_orderqueue(42);
+	add_to_orderqueue(41);
+	add_to_orderqueue(43);
+	add_to_orderqueue(43);
+	add_to_orderqueue(42);
+	add_to_orderqueue(41);
 
 	printf("\n");
 

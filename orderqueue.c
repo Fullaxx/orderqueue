@@ -85,11 +85,13 @@ static oqnode_t* find_predecessor(oqtype_t num)
 */
 int pipeline_insert(void *pkg, oqtype_t num, int reject_dupes)
 {
-	int n = 0;
-	char log[128];
 	oqnode_t *cursor = NULL;
 	oqnode_t *pre = NULL;
 	oqnode_t *post = NULL;
+#ifdef DEBUG_INSERT
+	int n = 0;
+	char log[128];
+#endif
 
 	PIPELOCK;
 
@@ -112,28 +114,36 @@ int pipeline_insert(void *pkg, oqtype_t num, int reject_dupes)
 			if((reject_dupes) && (pre->lower) && (num == pre->lower->num)) { BAIL_INSERTION_SAFELY(cursor) }
 
 			/* cursor is lower than pre */
+#ifdef DEBUG_INSERT
 			n += snprintf(&log[n], 128-n, "... ");
 			n += snprintf(&log[n], 128-n, OQFMT, pre->num);
 			n += snprintf(&log[n], 128-n, " -> ");
+#endif
 			post = pre->lower;
 			pre->lower = cursor;
 			cursor->higher = pre;
 		}
 	}
 
+#ifdef DEBUG_INSERT
 	if(!pre) { n += snprintf(&log[n], 128-n, "*** "); }
 	n += snprintf(&log[n], 128-n, OQFMT, num);
+#endif
 
 	if(post) {
 		cursor->lower = post;
 		post->higher = cursor;
+#ifdef DEBUG_INSERT
 		n += snprintf(&log[n], 128-n, " -> ");
 		n += snprintf(&log[n], 128-n, OQFMT, post->num);
 		n += snprintf(&log[n], 128-n, " ...");
+#endif
 	} else {
 		/* cursor is lowest */
 		g_lowest = cursor;
+#ifdef DEBUG_INSERT
 		n += snprintf(&log[n], 128-n, " ***");
+#endif
 	}
 
 	/* Fill in all the details */
